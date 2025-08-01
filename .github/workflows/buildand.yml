@@ -1,0 +1,26 @@
+name: Build Android
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y ninja-build python3
+
+      - name: Build for Android (arm64)
+        run: |
+          ./get-clang.sh
+          ./build_android.py --target-cpu arm64
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libnaive-arm64
+          path: out/Release/libnaive.so
